@@ -49,6 +49,8 @@ If available, data on Node performance, historical interruptions, and Pod schedu
 
 ### Scoring components
 
+The scoring components of the algorithm are designed to evaluate how well available Nodes matches the requirements of a Pod, using several key factors. Each factor contributes to a Nodes overall score, guiding the decision-making process. The algorithm considers resource utilization (CPU, memory), disk and network types, Node pricing, stability (e.g., spot instance risks), and the priority of the workload. By assigning a weighted score to each Node based on these factors, the algorithm identifies the Node that offers the best balance between resource fit, cost efficiency, and workload needs, ensuring optimal scheduling.
+
 #### ResourceFitScore (CPU/Memory)
 
 Score how well the Pod’s resource requests/limits fit within the available resources on the Node.
