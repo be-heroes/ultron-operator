@@ -1,4 +1,4 @@
-module github.com/emma-community/emma-ultron-operator
+module github.com/emma-community/ultron-operator
 
 go 1.21
 
