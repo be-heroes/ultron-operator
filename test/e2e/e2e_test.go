@@ -24,7 +24,7 @@ import (
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"
 
-	"github.com/emma-community/ultron-operator/test/utils"
+	"github.com/be-heroes/ultron-operator/test/utils"
 )
 
 const namespace = "ultron-operator-system"

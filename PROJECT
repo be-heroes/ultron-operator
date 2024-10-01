@@ -9,5 +9,5 @@ plugins:
   manifests.sdk.operatorframework.io/v2: {}
   scorecard.sdk.operatorframework.io/v2: {}
 projectName: ultron-operator
-repo: github.com/emma-community/ultron-operator
+repo: github.com/be-heroes/ultron-operator
 version: "3"
