@@ -22,10 +22,9 @@ import (
 )
 
 type UltronAttendantSpec struct {
-	CacheRefreshInterval int32                      `json:"cacheRefreshInterval"`
-	Container            corev1.Container           `json:"container"`
-	Credentials          []corev1.SecretKeySelector `json:"credentials"`
-	Redis                RedisSpec                  `json:"redis"`
+	CacheRefreshInterval int32            `json:"cacheRefreshInterval"`
+	Container            corev1.Container `json:"container"`
+	Redis                RedisSpec        `json:"redis"`
 }
 
 type UltronAttendantStatus struct {

@@ -4,6 +4,21 @@ metadata:
   labels:
     app.kubernetes.io/name: ultron-operator
     app.kubernetes.io/managed-by: kustomize
-  name: ultronobserver-sample
+  name: ultron-observer
 spec:
-  # TODO(user): Add fields here
+  container:
+    name: "ultron-observer"
+    image: "ultron-observer:latest"
+    resources:
+      limits:
+        memory: "512Mi"
+        cpu: "500m"
+      requests:
+        memory: "256Mi"
+        cpu: "250m"
+  redis:
+    address: "redis-service.default.svc:6379"
+    database: 0
+    password:      
+      - name: "ultron-credentials"
+        key: "ULTRON_SERVER_REDIS_PASSWORD"

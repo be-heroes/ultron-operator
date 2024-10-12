@@ -38,76 +38,12 @@ spec:
           spec:
             properties:
               address:
-                description: EndpointAddress is a tuple that describes single IP address.
-                properties:
-                  hostname:
-                    description: The Hostname of this endpoint
-                    type: string
-                  ip:
-                    description: |-
-                      The IP of this endpoint.
-                      May not be loopback (127.0.0.0/8 or ::1), link-local (169.254.0.0/16 or fe80::/10),
-                      or link-local multicast (224.0.0.0/24 or ff02::/16).
-                    type: string
-                  nodeName:
-                    description: 'Optional: Node hosting this endpoint. This can be
-                      used to determine endpoints local to a node.'
-                    type: string
-                  targetRef:
-                    description: Reference to object providing the endpoint.
-                    properties:
-                      apiVersion:
-                        description: API version of the referent.
-                        type: string
-                      fieldPath:
-                        description: |-
-                          If referring to a piece of an object instead of an entire object, this string
-                          should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
-                          For example, if the object reference is to a container within a pod, this would take on a value like:
-                          "spec.containers{name}" (where "name" refers to the name of the container that triggered
-                          the event) or if no container name is specified "spec.containers[2]" (container with
-                          index 2 in this pod). This syntax is chosen only to have some well-defined way of
-                          referencing a part of an object.
-                          TODO: this design is not final and this field is subject to change in the future.
-                        type: string
-                      kind:
-                        description: |-
-                          Kind of the referent.
-                          More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-                        type: string
-                      name:
-                        description: |-
-                          Name of the referent.
-                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                        type: string
-                      namespace:
-                        description: |-
-                          Namespace of the referent.
-                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
-                        type: string
-                      resourceVersion:
-                        description: |-
-                          Specific resourceVersion to which this reference is made, if any.
-                          More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
-                        type: string
-                      uid:
-                        description: |-
-                          UID of the referent.
-                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
-                        type: string
-                    type: object
-                    x-kubernetes-map-type: atomic
-                required:
-                - ip
-                type: object
-                x-kubernetes-map-type: atomic
+                type: string
               certificate:
                 properties:
                   commonName:
                     type: string
                   dnsNames:
-                    type: string
-                  exportPath:
                     type: string
                   ipAddresses:
                     type: string
@@ -116,7 +52,6 @@ spec:
                 required:
                 - commonName
                 - dnsNames
-                - exportPath
                 - ipAddresses
                 - organization
                 type: object
@@ -1449,207 +1384,33 @@ spec:
                 required:
                 - name
                 type: object
-              credentials:
-                items:
-                  description: SecretKeySelector selects a key of a Secret.
-                  properties:
-                    key:
-                      description: The key of the secret to select from.  Must be
-                        a valid secret key.
-                      type: string
-                    name:
-                      description: |-
-                        Name of the referent.
-                        More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                        TODO: Add other useful fields. apiVersion, kind, uid?
-                      type: string
-                    optional:
-                      description: Specify whether the Secret or its key must be defined
-                      type: boolean
-                  required:
-                  - key
-                  type: object
-                  x-kubernetes-map-type: atomic
-                type: array
               redis:
                 properties:
                   address:
-                    description: EndpointAddress is a tuple that describes single
-                      IP address.
-                    properties:
-                      hostname:
-                        description: The Hostname of this endpoint
-                        type: string
-                      ip:
-                        description: |-
-                          The IP of this endpoint.
-                          May not be loopback (127.0.0.0/8 or ::1), link-local (169.254.0.0/16 or fe80::/10),
-                          or link-local multicast (224.0.0.0/24 or ff02::/16).
-                        type: string
-                      nodeName:
-                        description: 'Optional: Node hosting this endpoint. This can
-                          be used to determine endpoints local to a node.'
-                        type: string
-                      targetRef:
-                        description: Reference to object providing the endpoint.
-                        properties:
-                          apiVersion:
-                            description: API version of the referent.
-                            type: string
-                          fieldPath:
-                            description: |-
-                              If referring to a piece of an object instead of an entire object, this string
-                              should contain a valid JSON/Go field access statement, such as desiredState.manifest.containers[2].
-                              For example, if the object reference is to a container within a pod, this would take on a value like:
-                              "spec.containers{name}" (where "name" refers to the name of the container that triggered
-                              the event) or if no container name is specified "spec.containers[2]" (container with
-                              index 2 in this pod). This syntax is chosen only to have some well-defined way of
-                              referencing a part of an object.
-                              TODO: this design is not final and this field is subject to change in the future.
-                            type: string
-                          kind:
-                            description: |-
-                              Kind of the referent.
-                              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
-                            type: string
-                          name:
-                            description: |-
-                              Name of the referent.
-                              More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                            type: string
-                          namespace:
-                            description: |-
-                              Namespace of the referent.
-                              More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
-                            type: string
-                          resourceVersion:
-                            description: |-
-                              Specific resourceVersion to which this reference is made, if any.
-                              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
-                            type: string
-                          uid:
-                            description: |-
-                              UID of the referent.
-                              More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#uids
-                            type: string
-                        type: object
-                        x-kubernetes-map-type: atomic
-                    required:
-                    - ip
-                    type: object
-                    x-kubernetes-map-type: atomic
+                    type: string
                   database:
                     format: int32
                     type: integer
                   password:
-                    description: EnvVar represents an environment variable present
-                      in a Container.
+                    description: |-
+                      SecretEnvSource selects a Secret to populate the environment
+                      variables with.
+
+
+                      The contents of the target Secret's Data field will represent the
+                      key-value pairs as environment variables.
                     properties:
                       name:
-                        description: Name of the environment variable. Must be a C_IDENTIFIER.
-                        type: string
-                      value:
                         description: |-
-                          Variable references $(VAR_NAME) are expanded
-                          using the previously defined environment variables in the container and
-                          any service environment variables. If a variable cannot be resolved,
-                          the reference in the input string will be unchanged. Double $$ are reduced
-                          to a single $, which allows for escaping the $(VAR_NAME) syntax: i.e.
-                          "$$(VAR_NAME)" will produce the string literal "$(VAR_NAME)".
-                          Escaped references will never be expanded, regardless of whether the variable
-                          exists or not.
-                          Defaults to "".
+                          Name of the referent.
+                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                          TODO: Add other useful fields. apiVersion, kind, uid?
                         type: string
-                      valueFrom:
-                        description: Source for the environment variable's value.
-                          Cannot be used if value is not empty.
-                        properties:
-                          configMapKeyRef:
-                            description: Selects a key of a ConfigMap.
-                            properties:
-                              key:
-                                description: The key to select.
-                                type: string
-                              name:
-                                description: |-
-                                  Name of the referent.
-                                  More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                  TODO: Add other useful fields. apiVersion, kind, uid?
-                                type: string
-                              optional:
-                                description: Specify whether the ConfigMap or its
-                                  key must be defined
-                                type: boolean
-                            required:
-                            - key
-                            type: object
-                            x-kubernetes-map-type: atomic
-                          fieldRef:
-                            description: |-
-                              Selects a field of the pod: supports metadata.name, metadata.namespace, `metadata.labels['<KEY>']`, `metadata.annotations['<KEY>']`,
-                              spec.nodeName, spec.serviceAccountName, status.hostIP, status.podIP, status.podIPs.
-                            properties:
-                              apiVersion:
-                                description: Version of the schema the FieldPath is
-                                  written in terms of, defaults to "v1".
-                                type: string
-                              fieldPath:
-                                description: Path of the field to select in the specified
-                                  API version.
-                                type: string
-                            required:
-                            - fieldPath
-                            type: object
-                            x-kubernetes-map-type: atomic
-                          resourceFieldRef:
-                            description: |-
-                              Selects a resource of the container: only resources limits and requests
-                              (limits.cpu, limits.memory, limits.ephemeral-storage, requests.cpu, requests.memory and requests.ephemeral-storage) are currently supported.
-                            properties:
-                              containerName:
-                                description: 'Container name: required for volumes,
-                                  optional for env vars'
-                                type: string
-                              divisor:
-                                anyOf:
-                                - type: integer
-                                - type: string
-                                description: Specifies the output format of the exposed
-                                  resources, defaults to "1"
-                                pattern: ^(\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))(([KMGTPE]i)|[numkMGTPE]|([eE](\+|-)?(([0-9]+(\.[0-9]*)?)|(\.[0-9]+))))?$
-                                x-kubernetes-int-or-string: true
-                              resource:
-                                description: 'Required: resource to select'
-                                type: string
-                            required:
-                            - resource
-                            type: object
-                            x-kubernetes-map-type: atomic
-                          secretKeyRef:
-                            description: Selects a key of a secret in the pod's namespace
-                            properties:
-                              key:
-                                description: The key of the secret to select from.  Must
-                                  be a valid secret key.
-                                type: string
-                              name:
-                                description: |-
-                                  Name of the referent.
-                                  More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                                  TODO: Add other useful fields. apiVersion, kind, uid?
-                                type: string
-                              optional:
-                                description: Specify whether the Secret or its key
-                                  must be defined
-                                type: boolean
-                            required:
-                            - key
-                            type: object
-                            x-kubernetes-map-type: atomic
-                        type: object
-                    required:
-                    - name
+                      optional:
+                        description: Specify whether the Secret must be defined
+                        type: boolean
                     type: object
+                    x-kubernetes-map-type: atomic
                 required:
                 - address
                 - database
@@ -1659,7 +1420,6 @@ spec:
             - address
             - certificate
             - container
-            - credentials
             - redis
             type: object
           status:

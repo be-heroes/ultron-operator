@@ -4,6 +4,37 @@ metadata:
   labels:
     app.kubernetes.io/name: ultron-operator
     app.kubernetes.io/managed-by: kustomize
-  name: ultron-sample
+  name: ultron
 spec:
-  # TODO(user): Add fields here
+  address: ":8443"
+  certificate:
+    commonName: "ultron-service.default.svc"
+    dnsNames: "ultron-service.default.svc,ultron-service,localhost"
+    ipAddresses: "127.0.0.1"
+    organization: "be-heroes"
+  container:
+    name: "ultron"
+    image: "ultron:latest"
+    ports:
+      - containerPort: 8443
+        name: "https"
+    env:
+      - name: ULTRON_SERVER_CERTIFICATE_EXPORT_PATH
+        value: "\\volume\\path\\to\\export\\folder"
+      - name: EMMA_CLIENT_ID
+        value: ""
+      - name: EMMA_CLIENT_SECRET
+        value: ""
+    resources:
+      limits:
+        memory: "512Mi"
+        cpu: "500m"
+      requests:
+        memory: "256Mi"
+        cpu: "250m"
+  redis:
+    address: "redis-service.default.svc:6379"
+    database: 0
+    password:      
+      - name: "ultron-credentials"
+        key: "ULTRON_SERVER_REDIS_PASSWORD"
