@@ -1,0 +1,23 @@
+# permissions for end users to view ultronattendants.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    app.kubernetes.io/name: ultron-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: ultronattendant-viewer-role
+rules:
+- apiGroups:
+  - ultron.2mind.dk
+  resources:
+  - ultronattendants
+  verbs:
+  - get
+  - list
+  - watch
+- apiGroups:
+  - ultron.2mind.dk
+  resources:
+  - ultronattendants/status
+  verbs:
+  - get

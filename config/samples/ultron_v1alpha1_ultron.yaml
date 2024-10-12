@@ -1,0 +1,9 @@
+apiVersion: ultron.2mind.dk/v1alpha1
+kind: Ultron
+metadata:
+  labels:
+    app.kubernetes.io/name: ultron-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: ultron-sample
+spec:
+  # TODO(user): Add fields here

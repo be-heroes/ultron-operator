@@ -1,0 +1,6 @@
+## Append samples of your project ##
+resources:
+- ultron_v1alpha1_ultron.yaml
+- ultron_v1alpha1_ultronattendant.yaml
+- ultron_v1alpha1_ultronobserver.yaml
+#+kubebuilder:scaffold:manifestskustomizesamples
