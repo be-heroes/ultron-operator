@@ -1366,41 +1366,8 @@ spec:
                 required:
                 - name
                 type: object
-              redis:
-                properties:
-                  address:
-                    type: string
-                  database:
-                    format: int32
-                    type: integer
-                  password:
-                    description: |-
-                      SecretEnvSource selects a Secret to populate the environment
-                      variables with.
-
-
-                      The contents of the target Secret's Data field will represent the
-                      key-value pairs as environment variables.
-                    properties:
-                      name:
-                        description: |-
-                          Name of the referent.
-                          More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
-                          TODO: Add other useful fields. apiVersion, kind, uid?
-                        type: string
-                      optional:
-                        description: Specify whether the Secret must be defined
-                        type: boolean
-                    type: object
-                    x-kubernetes-map-type: atomic
-                required:
-                - address
-                - database
-                - password
-                type: object
             required:
             - container
-            - redis
             type: object
           status:
             type: object

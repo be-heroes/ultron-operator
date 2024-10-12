@@ -6,12 +6,6 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: ultron
 spec:
-  address: ":8443"
-  certificate:
-    commonName: "ultron-service.default.svc"
-    dnsNames: "ultron-service.default.svc,ultron-service,localhost"
-    ipAddresses: "127.0.0.1"
-    organization: "be-heroes"
   container:
     name: "ultron"
     image: "ultron:latest"
@@ -20,11 +14,21 @@ spec:
         name: "https"
     env:
       - name: ULTRON_SERVER_CERTIFICATE_EXPORT_PATH
-        value: "\\volume\\path\\to\\export\\folder"
-      - name: EMMA_CLIENT_ID
-        value: ""
-      - name: EMMA_CLIENT_SECRET
-        value: ""
+        value: "\\ultron-data\\ultron_ca_cert.pem"
+      - name: ULTRON_SERVER_CERTIFICATE_ORGANIZATION
+        value: "be-heroes"
+      - name: ULTRON_SERVER_CERTIFICATE_COMMON_NAME
+        value: "ultron-service.default.svc"
+      - name: ULTRON_SERVER_CERTIFICATE_DNS_NAMES
+        value: "ultron-service.default.svc,ultron-service,localhost"
+      - name: ULTRON_SERVER_CERTIFICATE_IP_ADDRESSES
+        value: "127.0.0.1"
+      - name: ULTRON_SERVER_REDIS_ADDRESS
+        value: "redis-service.default.svc:6379"
+      - name: ULTRON_SERVER_REDIS_PASSWORD
+        value: "not2secure4u"
+      - name: ULTRON_SERVER_REDIS_DATABASE
+        value: 0
     resources:
       limits:
         memory: "512Mi"
@@ -32,9 +36,7 @@ spec:
       requests:
         memory: "256Mi"
         cpu: "250m"
-  redis:
-    address: "redis-service.default.svc:6379"
-    database: 0
-    password:      
-      - name: "ultron-credentials"
-        key: "ULTRON_SERVER_REDIS_PASSWORD"
+  dataVolume:
+    name: ultron-data
+    persistentVolumeClaim:
+      claimName: ultron-volume-claim

@@ -22,10 +22,8 @@ import (
 )
 
 type UltronSpec struct {
-	Address     string           `json:"address"`
-	Certificate CertificateSpec  `json:"certificate"`
-	Container   corev1.Container `json:"container"`
-	Redis       RedisSpec        `json:"redis"`
+	Container  corev1.Container `json:"container"`
+	DataVolume corev1.Volume    `json:"dataVolume,omitempty"`
 }
 
 type UltronStatus struct {

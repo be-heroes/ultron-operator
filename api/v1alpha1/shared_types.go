@@ -7,10 +7,3 @@ type RedisSpec struct {
 	Database int32                  `json:"database"`
 	Password corev1.SecretEnvSource `json:"password"`
 }
-
-type CertificateSpec struct {
-	CommonName   string `json:"commonName"`
-	DnsNames     string `json:"dnsNames"`
-	IpAddresses  string `json:"ipAddresses"`
-	Organization string `json:"organization"`
-}

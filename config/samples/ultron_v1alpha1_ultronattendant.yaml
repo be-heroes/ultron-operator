@@ -6,10 +6,22 @@ metadata:
     app.kubernetes.io/managed-by: kustomize
   name: ultron-attendant
 spec:
-  cacheRefreshInterval: 15
   container:
     name: "ultron-attendant"
     image: "ultron-attendant:latest"
+    env:
+      - name: ULTRON_ATTENDANT_CACHE_REFRESH_INTERVAL
+        value: "15"
+      - name: ULTRON_SERVER_REDIS_ADDRESS
+        value: "redis-service.default.svc:6379"
+      - name: ULTRON_SERVER_REDIS_PASSWORD
+        value: "not2secure4u"
+      - name: ULTRON_SERVER_REDIS_DATABASE
+        value: "0"
+      - name: EMMA_CLIENT_ID
+        value: ""
+      - name: EMMA_CLIENT_SECRET
+        value: ""
     resources:
       limits:
         memory: "512Mi"
@@ -17,10 +29,3 @@ spec:
       requests:
         memory: "256Mi"
         cpu: "250m"
-  redis:
-    address: "redis-service.default.svc:6379"
-    database: 0
-    password:      
-      - name: "ultron-credentials"
-        key: "ULTRON_SERVER_REDIS_PASSWORD"
-

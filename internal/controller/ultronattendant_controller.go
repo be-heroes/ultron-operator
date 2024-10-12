@@ -19,44 +19,91 @@ package controller
 import (
 	"context"
 
+	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/errors"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/types"
 	ctrl "sigs.k8s.io/controller-runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
 	ultronv1alpha1 "github.com/be-heroes/ultron-operator/api/v1alpha1"
 )
 
-// UltronAttendantReconciler reconciles a UltronAttendant object
 type UltronAttendantReconciler struct {
 	client.Client
 	Scheme *runtime.Scheme
 }
 
-//+kubebuilder:rbac:groups=ultron.2mind.dk,resources=ultronattendants,verbs=get;list;watch;create;update;patch;delete
-//+kubebuilder:rbac:groups=ultron.2mind.dk,resources=ultronattendants/status,verbs=get;update;patch
-//+kubebuilder:rbac:groups=ultron.2mind.dk,resources=ultronattendants/finalizers,verbs=update
+func (r *UltronAttendantReconciler) SetupWithManager(mgr ctrl.Manager) error {
+	return ctrl.NewControllerManagedBy(mgr).
+		For(&ultronv1alpha1.UltronAttendant{}).
+		Owns(&corev1.Pod{}).
+		Complete(r)
+}
 
-// Reconcile is part of the main kubernetes reconciliation loop which aims to
-// move the current state of the cluster closer to the desired state.
-// TODO(user): Modify the Reconcile function to compare the state specified by
-// the UltronAttendant object against the actual cluster state, and then
-// perform operations to make the cluster state reflect the state specified by
-// the user.
-//
-// For more details, check Reconcile and its Result here:
-// - https://pkg.go.dev/sigs.k8s.io/controller-runtime@v0.17.3/pkg/reconcile
+// +kubebuilder:rbac:groups=ultron.2mind.dk,resources=ultronattendants,verbs=get;list;watch;create;update;patch;delete
+// +kubebuilder:rbac:groups=ultron.2mind.dk,resources=ultronattendants/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups=ultron.2mind.dk,resources=ultronattendants/finalizers,verbs=update
 func (r *UltronAttendantReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.Result, error) {
-	_ = log.FromContext(ctx)
+	logger := log.FromContext(ctx)
 
-	// TODO(user): your logic here
+	logger.Info("Reconciling UltronAttendant object")
+
+	attendant := &ultronv1alpha1.UltronAttendant{}
+	err := r.Client.Get(ctx, req.NamespacedName, attendant)
+
+	if err != nil {
+		if errors.IsNotFound(err) {
+			return ctrl.Result{}, nil
+		}
+
+		return ctrl.Result{}, err
+	}
+
+	pod := newPodForUltronAttendant(attendant)
+
+	if err := controllerutil.SetControllerReference(attendant, pod, r.Scheme); err != nil {
+		return ctrl.Result{}, err
+	}
+
+	foundPod := &corev1.Pod{}
+	err = r.Client.Get(ctx, types.NamespacedName{Name: pod.Name, Namespace: pod.Namespace}, foundPod)
+
+	if err != nil && errors.IsNotFound(err) {
+		logger.Info("Creating a new Pod", "Pod.Namespace", pod.Namespace, "Pod.Name", pod.Name)
+
+		err = r.Client.Create(ctx, pod)
+
+		if err != nil {
+			return ctrl.Result{}, err
+		}
+
+		return ctrl.Result{}, nil
+	} else if err != nil {
+		return ctrl.Result{}, err
+	}
 
 	return ctrl.Result{}, nil
 }
 
-// SetupWithManager sets up the controller with the Manager.
-func (r *UltronAttendantReconciler) SetupWithManager(mgr ctrl.Manager) error {
-	return ctrl.NewControllerManagedBy(mgr).
-		For(&ultronv1alpha1.UltronAttendant{}).
-		Complete(r)
+func newPodForUltronAttendant(cr *ultronv1alpha1.UltronAttendant) *corev1.Pod {
+	labels := map[string]string{
+		"app": cr.Name,
+	}
+
+	pod := &corev1.Pod{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      cr.Name,
+			Namespace: cr.Namespace,
+			Labels:    labels,
+		},
+		Spec: corev1.PodSpec{
+			Containers: []corev1.Container{cr.Spec.Container},
+		},
+	}
+
+	return pod
 }

@@ -23,7 +23,6 @@ import (
 
 type UltronObserverSpec struct {
 	Container corev1.Container `json:"container"`
-	Redis     RedisSpec        `json:"redis"`
 }
 
 type UltronObserverStatus struct {

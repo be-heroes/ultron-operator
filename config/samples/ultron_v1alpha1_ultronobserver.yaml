@@ -9,6 +9,13 @@ spec:
   container:
     name: "ultron-observer"
     image: "ultron-observer:latest"
+    env:
+      - name: ULTRON_SERVER_REDIS_ADDRESS
+        value: "redis-service.default.svc:6379"
+      - name: ULTRON_SERVER_REDIS_PASSWORD
+        value: "not2secure4u"
+      - name: ULTRON_SERVER_REDIS_DATABASE
+        value: "0"
     resources:
       limits:
         memory: "512Mi"
@@ -16,9 +23,3 @@ spec:
       requests:
         memory: "256Mi"
         cpu: "250m"
-  redis:
-    address: "redis-service.default.svc:6379"
-    database: 0
-    password:      
-      - name: "ultron-credentials"
-        key: "ULTRON_SERVER_REDIS_PASSWORD"
