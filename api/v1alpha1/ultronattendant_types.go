@@ -17,31 +17,23 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
-// UltronAttendantSpec defines the desired state of UltronAttendant
 type UltronAttendantSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of UltronAttendant. Edit ultronattendant_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	CacheRefreshInterval int32                      `json:"cacheRefreshInterval"`
+	Container            corev1.Container           `json:"container"`
+	Credentials          []corev1.SecretKeySelector `json:"credentials"`
+	Redis                RedisSpec                  `json:"redis"`
 }
 
-// UltronAttendantStatus defines the observed state of UltronAttendant
 type UltronAttendantStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
-// UltronAttendant is the Schema for the ultronattendants API
 type UltronAttendant struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -52,7 +44,6 @@ type UltronAttendant struct {
 
 //+kubebuilder:object:root=true
 
-// UltronAttendantList contains a list of UltronAttendant
 type UltronAttendantList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`

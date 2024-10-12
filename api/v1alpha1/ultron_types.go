@@ -17,31 +17,24 @@ limitations under the License.
 package v1alpha1
 
 import (
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
-// NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
-
-// UltronSpec defines the desired state of Ultron
 type UltronSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// Foo is an example field of Ultron. Edit ultron_types.go to remove/update
-	Foo string `json:"foo,omitempty"`
+	Address     corev1.EndpointAddress     `json:"address"`
+	Certificate CertificateSpec            `json:"certificate"`
+	Container   corev1.Container           `json:"container"`
+	Credentials []corev1.SecretKeySelector `json:"credentials"`
+	Redis       RedisSpec                  `json:"redis"`
 }
 
-// UltronStatus defines the observed state of Ultron
 type UltronStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
 }
 
 //+kubebuilder:object:root=true
 //+kubebuilder:subresource:status
 
-// Ultron is the Schema for the ultrons API
 type Ultron struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -52,7 +45,6 @@ type Ultron struct {
 
 //+kubebuilder:object:root=true
 
-// UltronList contains a list of Ultron
 type UltronList struct {
 	metav1.TypeMeta `json:",inline"`
 	metav1.ListMeta `json:"metadata,omitempty"`
