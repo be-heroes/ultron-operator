@@ -9,6 +9,7 @@ ULTRON_AKS_VNET_SUBNET_DEFAULT=ultron-aks-subnet-default-$ULTRON_ENVIRONMENT
 ULTRON_AKS_VNET_SUBNET_DEFAULT_PREFIX=10.240.0.0/16
 ULTRON_AKS_VNET_SUBNET_VIRTUALNODES=ultron-aks-subnet-virtual-nodes-$ULTRON_ENVIRONMENT
 ULTRON_AKS_VNET_SUBNET_VIRTUALNODES_PREFIX=10.241.0.0/16
+SIGNED_IN_USER_ID=$(az ad signed-in-user show --query id -o tsv | tr -d '\r')
 
 # Register Required Providers
 az provider register --namespace Microsoft.Insights
@@ -49,16 +50,17 @@ assigned_roles=$(az role assignment list --assignee $trimmed_user_upn --query "[
 if [[ -n $assigned_roles ]]; then
   # Create Azure AD Group (Requires: User Access Administrator Role)
   ULTRON_AKS_AD_AKSADMIN_GROUP_ID=$(az ad group create --display-name aksadmins --mail-nickname aksadmins --query id -o tsv | tr -d '\r')
-  SIGNED_IN_USER_ID=$(az ad signed-in-user show --query id -o tsv | tr -d '\r')
 
   # Set current user as owner of aksadmins Group
   az ad group owner add --group aksadmins --owner-object-id $SIGNED_IN_USER_ID
+
+  ULTRON_AKS_AD_ADMIN_USER_PASSWORD=$(openssl rand -base64 14)
 
   # Create Azure AD AKS Admin User (Requires: User Access Administrator Role)
   ULTRON_AKS_AD_AKSADMIN1_USER_OBJECT_ID=$(az ad user create \
                                   --display-name "AKS Admin1" \
                                   --user-principal-name aksadmin1@epwispcompute.onmicrosoft.com \
-                                  --password @AKSDemo123 \
+                                  --password $ULTRON_AKS_AD_ADMIN_USER_PASSWORD \
                                   --query id -o tsv | tr -d '\r')
 
   # Associate aksadmin User to aksadmins Group
@@ -82,6 +84,7 @@ az aks create --resource-group ${ULTRON_RESOURCE_GROUP} \
               --generate-ssh-keys \
               --network-plugin azure \
               --enable-aad \
+              --enable-azure-rbac \
               --enable-addons monitoring \
               --enable-cluster-autoscaler \
               --node-count 1 \
@@ -98,6 +101,12 @@ az aks create --resource-group ${ULTRON_RESOURCE_GROUP} \
               --nodepool-labels nodepool-type=system nodepoolos=linux app=system-apps \
               --nodepool-name systempool \
               --nodepool-tags nodepool-type=system nodepoolos=linux app=system-apps
+
+# Get the new cluster id
+ULTRON_AKS_ID=$(az aks show --resource-group ${ULTRON_RESOURCE_GROUP} --name ${ULTRON_AKS_CLUSTER} --query id --output tsv | tr -d '\r')
+
+# Assign RBAC roles
+az role assignment create --role "Azure Kubernetes Service RBAC Admin" --assignee ${SIGNED_IN_USER_ID} --scope ${ULTRON_AKS_ID}
 
 # Configure Credentials
 az aks get-credentials --name ${ULTRON_AKS_CLUSTER}  --resource-group ${ULTRON_RESOURCE_GROUP} 
